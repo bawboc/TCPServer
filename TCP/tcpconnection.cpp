@@ -10,55 +10,55 @@ TcpConnection::~TcpConnection()
     qDebug() << this << "Destroyed";
 }
 
-void TcpConnection::SetSocket(QTcpSocket *socket)
+void TcpConnection::setSocket(QTcpSocket *socket)
 {
     m_socket = socket;
-    connect(m_socket,&QTcpSocket::connected,this,&TcpConnection::Connected);
-    connect(m_socket,&QTcpSocket::disconnected,this,&TcpConnection::Disconnected);
-    connect(m_socket,&QTcpSocket::readyRead,this,&TcpConnection::ReadyRead);
-    connect(m_socket,&QTcpSocket::bytesWritten,this,&TcpConnection::BytesWritten);
-    connect(m_socket,&QTcpSocket::stateChanged,this,&TcpConnection::StateChanged);
-    connect(m_socket,static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error),this,&TcpConnection::Error);
+    connect(m_socket,&QTcpSocket::connected,this,&TcpConnection::connected);
+    connect(m_socket,&QTcpSocket::disconnected,this,&TcpConnection::disconnected);
+    connect(m_socket,&QTcpSocket::readyRead,this,&TcpConnection::readyRead);
+    connect(m_socket,&QTcpSocket::bytesWritten,this,&TcpConnection::bytesWritten);
+    connect(m_socket,&QTcpSocket::stateChanged,this,&TcpConnection::stateChanged);
+    connect(m_socket,static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error),this,&TcpConnection::error);
 }
 
-QTcpSocket *TcpConnection::GetSocket()
+QTcpSocket *TcpConnection::getSocket()
 {
     if  (!sender()) return 0;
     return static_cast<QTcpSocket*>(sender());
 }
 
-void TcpConnection::Connected()
+void TcpConnection::connected()
 {
     if  (!sender()) return;
     qDebug() << this << " conected " << sender();
 }
 
-void TcpConnection::Disconnected()
+void TcpConnection::disconnected()
 {
     if  (!sender()) return;
-    qDebug() << this << " disconnected " << GetSocket();
+    qDebug() << this << " disconnected " << getSocket();
 }
 
-void TcpConnection::ReadyRead()
+void TcpConnection::readyRead()
 {
     if  (!sender()) return;
-    qDebug() << this << " readyRead " << GetSocket();
+    qDebug() << this << " readyRead " << getSocket();
 }
 
-void TcpConnection::BytesWritten(qint64 bytes)
+void TcpConnection::bytesWritten(qint64 bytes)
 {
     if  (!sender()) return;
-    qDebug() << this << " BytedWritten " << GetSocket() << " number of bytes =  " << bytes;
+    qDebug() << this << " BytedWritten " << getSocket() << " number of bytes =  " << bytes;
 }
 
-void TcpConnection::StateChanged(QAbstractSocket::SocketState SocketState)
+void TcpConnection::stateChanged(QAbstractSocket::SocketState SocketState)
 {
     if  (!sender()) return;
-    qDebug() << this << " StateChanged " << GetSocket() << " state =  " << SocketState;
+    qDebug() << this << " StateChanged " << getSocket() << " state =  " << SocketState;
 }
 
-void TcpConnection::Error(QAbstractSocket::SocketError SocketError)
+void TcpConnection::error(QAbstractSocket::SocketError SocketError)
 {
     if  (!sender()) return;
-    qDebug() << this << " Error " << GetSocket() << " error =  " << SocketError;
+    qDebug() << this << " Error " << getSocket() << " error =  " << SocketError;
 }

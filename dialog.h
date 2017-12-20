@@ -2,6 +2,7 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include "tcpserver.h"
 
 namespace Ui {
 class Dialog;
@@ -24,6 +25,8 @@ private:
     Ui::Dialog *ui;
 
     void SetStarted(bool started);
+
+    TcpServer m_server;
 };
 
 #endif // DIALOG_H

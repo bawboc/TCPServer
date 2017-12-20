@@ -10,7 +10,7 @@ TcpConnections::~TcpConnections()
     qDebug() << this << "Destroyed";
 }
 
-int TcpConnections::Count()
+int TcpConnections::count()
 {
     QReadWriteLock lock;
     lock.lockForRead();
@@ -19,7 +19,7 @@ int TcpConnections::Count()
     return value;
 }
 
-void TcpConnections::RemoveSocket(QTcpSocket *socket)
+void TcpConnections::removeSocket(QTcpSocket *socket)
 {
     if  (!socket) return;
     if  (!m_connections.contains(socket)) return;
@@ -35,10 +35,10 @@ void TcpConnections::RemoveSocket(QTcpSocket *socket)
     m_connections.remove(socket);
     socket->deleteLater();
 
-    qDebug() << this << "Clients still connected = " << Count();
+    qDebug() << this << "Clients still connected = " << count();
 }
 
-void TcpConnections::Disconnected()
+void TcpConnections::disconnected()
 {
     if  (!sender()) return;
     qDebug() << this << "Disconnecting socket" << sender();
@@ -46,10 +46,10 @@ void TcpConnections::Disconnected()
     QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
     if  (!socket) return;
 
-    RemoveSocket(socket);
+    removeSocket(socket);
 }
 
-void TcpConnections::Error(QAbstractSocket::SocketError socketError)
+void TcpConnections::error(QAbstractSocket::SocketError socketError)
 {
     if  (!sender()) return;
     qDebug() << this << "Error in socket " << sender() << " error " << socketError;
@@ -57,30 +57,31 @@ void TcpConnections::Error(QAbstractSocket::SocketError socketError)
     QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
     if  (!socket) return;
 
-    RemoveSocket(socket);
+    removeSocket(socket);
 }
 
-void TcpConnections::Start()
+void TcpConnections::start()
 {
     qDebug() << this << "Starting " << QThread::currentThread();
 }
 
-void TcpConnections::Quit()
+void TcpConnections::quit()
 {
     if  (!sender()) return;
     qDebug() << this << "Quitting";
 
     foreach (QTcpSocket* socket, m_connections.keys()) {
         qDebug() << this << "Closing socket" << socket;
-        RemoveSocket(socket);
+        removeSocket(socket);
     }
 
     qDebug() << this << "Finishing quit";
-    emit Finished();
+    emit finished();
 }
 
-void TcpConnections::Accept(qintptr handle, TcpConnection *connection)
+void TcpConnections::accept(qintptr handle, TcpConnection *connection)
 {
+    qDebug() << "***";
     QTcpSocket* socket = new QTcpSocket(this);
 
     if  (!socket->setSocketDescriptor(handle)){
@@ -88,9 +89,13 @@ void TcpConnections::Accept(qintptr handle, TcpConnection *connection)
         connection->deleteLater();
         return;
     }
-    connect(socket, &QTcpSocket::disconnected,this,&TcpConnections::Disconnected);
-    connect(socket,static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error),this,&TcpConnections::Error);
+    connect(socket, &QTcpSocket::disconnected,this,&TcpConnections::disconnected);
+    connect(socket,static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error),this,&TcpConnections::error);
 
-    qDebug() << this << "Clients = " << Count();
+    connection->moveToThread(QThread::currentThread());
+    connection->setSocket(socket);
+
+    m_connections.insert(socket,connection);
+    qDebug() << this << "Clients = " << count();
     emit socket->connected();
 }

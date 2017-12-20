@@ -19,25 +19,25 @@ public:
     /*
      * Number of clients
     */
-    virtual int Count();
+    virtual int count();
 
 protected:
     QMap<QTcpSocket*, TcpConnection*> m_connections;
-    void RemoveSocket(QTcpSocket* socket);
+    void removeSocket(QTcpSocket* socket);
 
 signals:
-    void Quitting();
-    void Finished();
+    void quitting();
+    void finished();
 
 protected slots:
-    void Disconnected();
-    void Error(QAbstractSocket::SocketError socketError);
+    void disconnected();
+    void error(QAbstractSocket::SocketError socketError);
 
 public slots:
 
-    void Start();
-    void Quit();
-    void Accept(qintptr handle, TcpConnection* connection);
+    void start();
+    void quit();
+    void accept(qintptr handle, TcpConnection* connection);
 };
 
 #endif // TCPCONNECTIONS_H
