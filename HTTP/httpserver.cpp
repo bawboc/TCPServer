@@ -20,7 +20,7 @@ void HttpServer::setRoot(QString path)
 {
     m_root = path;
     if  (m_root.endsWith("/") || m_root.endsWith("\\")){
-        m_root = m_root.mid((0,m_root.length()-1));
+        m_root = m_root.mid(0,m_root.length()-1);
     }
     qDebug() << this << "root set to: " << m_root;
 }
@@ -38,5 +38,10 @@ void HttpServer::setRate(int value)
 
 void HttpServer::incomingConnection(qintptr descriptor)
 {
+    qDebug() << this << "Incoming HTTP connection: " << descriptor;
+    HttpConnection* connection = new HttpConnection();
 
+    // To Do = set rate and root
+
+    accept(descriptor,connection);
 }
