@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TCPServer
 TEMPLATE = app
 
+include("HTTP/http.pri")
 include("TCP/tcp.pri")
 
 DEFINES += QT_DEPRECATED_WARNINGS
