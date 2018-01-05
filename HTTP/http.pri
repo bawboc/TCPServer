@@ -4,8 +4,10 @@ DEPENDPATH += $$PWD
 
 HEADERS += \
     $$PWD/httpserver.h \
-    $$PWD/httpconnection.h
+    $$PWD/httpconnection.h \
+    $$PWD/ratetransfer.h
 
 SOURCES += \
     $$PWD/httpserver.cpp \
-    $$PWD/httpconnection.cpp
+    $$PWD/httpconnection.cpp \
+    $$PWD/ratetransfer.cpp
