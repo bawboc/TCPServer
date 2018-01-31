@@ -44,9 +44,25 @@ protected:
     QString m_errorString;
     bool m_sheduled;
 
+    void setDefaults();
+    bool checkDevices();
+    bool checkTransfer();
+    void scheduleTransfer();
+
 signals:
+    void started();
+    void transferred(int bytes);
+    void finished();
+    void error();
 
 public slots:
+    void start();
+    void stop();
+
+protected slots:
+    void transfer();
+    void readyRead();
+    void bytesWritten(qint64 bytes);
 };
 
 #endif // RATETRANSFER_H
